@@ -1,0 +1,163 @@
+{{>head}}
+
+<body class="primary principal pageProfile">
+
+    {{>header}}
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Profile Buttons -->
+        
+        <div class="d-flex justify-content-start gap-3 p-3">
+            {{^fromAdmin}}
+            {{#isAdmin}}
+            <a href="administrator" class="profile-btn text-decoration-none">
+                Administrador
+            </a>
+            {{/isAdmin}}
+            
+            <a href="myLists" class="profile-btn text-decoration-none">
+                {{#isAdmin}} Todas las Listas {{/isAdmin}} 
+                {{^isAdmin}} Mis Listas {{/isAdmin}}
+            </a>
+            <a href="myReviews" class="profile-btn text-decoration-none">
+                {{#isAdmin}} Todas las Reseñas {{/isAdmin}} 
+                {{^isAdmin}} Mis Reseñas {{/isAdmin}}
+            </a>
+            {{/fromAdmin}}
+        </div>
+        
+        <!-- Profile Information -->
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-lg-7">
+                <div class="card p-4 generic-card rounded-4 border-0 mb-5">
+                    <h1 class="h3 mb-4 text-center text-white">Mi Perfil</h1>
+
+                    {{#fromAdmin}}
+                    <form action="/administrator/profile/{{currentUser.accountId}}/editProfile" method="post">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <div class="text-center mb-4">
+                            <img id="avatarProfile" src="/img/{{currentUser.accountAvatar.imageId}}" class="rounded-circle"
+                                width="175" height="175">
+                        </div>
+
+                        <div class="mb-3 text-center">
+                            <label class="small text-uppercase opacity-50 mb-1">Usuario</label>
+                            <input type="text" name="accountName" value="{{currentUser.accountName}}"
+                                class="profile-field rounded-3 py-3 px-4 mb-4 w-100 fs-5 text-center">
+                        </div>
+                        <div class="mb-3 text-center">
+                            <label class="small text-uppercase opacity-50 mb-1">Correo electrónico</label>
+                            <input type="email" name="accountEmail" value="{{currentUser.accountEmail}}"
+                                class="profile-field rounded-3 py-3 px-4 mb-4 w-100 fs-5 text-center">
+                        </div>
+                        <div class="mb-3 text-center">
+                            <label class="small text-uppercase opacity-50 mb-1">Fecha de nacimiento</label>
+                            <input type="date" name="accountBirthDate" value="{{currentUser.accountBirthDate}}"
+                                class="profile-field rounded-3 py-3 px-4 mb-4 w-100 fs-5 text-center">
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                    {{/fromAdmin}}
+
+                    {{^fromAdmin}}
+                    <div class="text-center mb-4">
+                        <button type="button" class="btn p-0 border-0" data-bs-toggle="modal"
+                            data-bs-target="#modalAvatar">
+                            {{#currentUser.accountAvatar}}
+                            <img id="avatarProfile" src="/img/{{currentUser.accountAvatar.imageId}}" class="rounded-circle"
+                                width="175" height="175">
+                                {{/currentUser.accountAvatar}}
+                        </button>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <label class="small text-uppercase opacity-50 mb-1">Usuario</label>
+                        <div class="profile-field rounded-3 py-3 px-4 mb-4 d-flex align-items-center justify-content-center fs-5"
+                            id="username">
+                            {{currentUser.accountName}}
+                        </div>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <label class="small text-uppercase opacity-50 mb-1">Correo electrónico</label>
+                        <div class="profile-field rounded-3 py-3 px-4 mb-4 d-flex align-items-center justify-content-center fs-5"
+                            id="email">
+                            {{currentUser.accountEmail}}
+                        </div>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <label class="small text-uppercase opacity-50 mb-1">Fecha de nacimiento</label>
+                        <div class="profile-field rounded-3 py-3 px-4 mb-4 d-flex align-items-center justify-content-center fs-5"
+                            id="yearBirth">
+                            {{currentUser.accountBirthDate}}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" id="editProfileBtn" class="btn btn-primary">Editar Perfil</button>
+                        <input type="hidden" id="csrfToken" name="_csrf" value="{{_csrf.token}}">
+                    </div>
+                    {{/fromAdmin}}
+                </div>
+            </div>
+            <!-- Chart -->
+            <div class="col-10 col-lg-5 pe-lg-5 mb-5">
+                <canvas id="myReviewsBarUser" 
+                data-values="{{{chartData}}}" 
+                data-username="{{{currentUser.accountName}}}"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <!-- Avatar Modal -->
+    <div class="modal fade" id="modalAvatar" tabindex="-1" aria-labelledby="modalAvatarLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalAvatarTitleLabel">¿Qué Avatar quieres ser?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="text-center mb-4">
+                            <p>Seleccionado actualmente:</p>
+                            {{#currentUser.accountAvatar}}
+                            <img src="/img/{{currentUser.accountAvatar.imageId}}" id="previewAvatar"
+                                class="rounded-circle border border-primary border-3" width="100" height="100">
+                            {{/currentUser.accountAvatar}}
+                        </div>
+                        <div class="row g-3 justify-content-center" id="avatarGallery">
+
+                            {{#availableAvatars}}
+                            <div class="col-4 text-center">
+                                <img src="/img/{{imageId}}"
+                                    class="img-thumbnail rounded-circle img-selectable active-avatar" role="button"
+                                    data-value="{{imageId}}">
+                            </div>
+                            {{/availableAvatars}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form id="avatarForm" action="/profile/avatar" method="post">
+                        <input type="hidden" id="avatarInput" name="imageId" value="{{#currentUser.accountAvatar}}/{{currentUser.accountAvatar.imageId}}{{/currentUser.accountAvatar}}">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <button type="button" class="btn btn-secondary btn-small"
+                            data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" id="saveAvatar" class="btn btn-primary btn-small"
+                            data-bs-dismiss="modal">Guardar
+                            Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/avatar.js"></script>
+    <script src="/js/profileForms.js"></script>
+    <script src="/js/userRatingBarChart.js" defer></script>
+
+</body>
+
+</html>

@@ -1,0 +1,733 @@
+{{>head}}
+
+<body class="primary principal">
+    {{>header}}
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="d-flex justify-content-start gap-3 p-3">
+            <a href="profile" class="profile-btn text-decoration-none">
+                Perfil
+            </a>
+            <a href="myLists" class="profile-btn text-decoration-none">
+                Todas las Listas
+            </a>
+            <a href="myReviews" class="profile-btn text-decoration-none">
+                Todas las Reseñas
+            </a>
+        </div>
+
+        <!-- Users Table -->
+        <div class="row mx-0 justify-content-md-center justify-content-start">
+            <div class="col-sm-10 col-lg-10 col-8">
+                <div class="table-responsive">
+                    <table class="table table-striped caption-top table-bordered">
+                        <colgroup>
+                            <col style="width:8%;">
+                            <col style="width:21%;">
+                            <col style="width:25%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:6%;">
+                        </colgroup>
+
+                        <caption class="admin-caption">Usuarios del Sistema</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Cumpleaños</th>
+                                <th scope="col" class="text-center align-middle">Rol</th>
+                                <th scope="col" class="text-center align-middle">Lists</th>
+                                <th scope="col" class="text-center align-middle">Reseñas</th>
+                                <th scope="col" class="text-center align-middle">Editar</th>
+                                <th scope="col" class="text-center align-middle">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {{#usersPreview}}
+                            <tr>
+                                <th scope="row" class="text-center">{{accountId}}</th>
+                                <td>{{accountName}}</td>
+                                <td>{{accountEmail}}</td>
+                                <td>{{accountBirthDate}}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary ">
+                                        {{accountRole}}
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <a href="/administrator/profile/{{accountId}}/userlist"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-list-nested fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/administrator/profile/{{accountId}}/review"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-card-text fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/administrator/profile/{{accountId}}/editProfile"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-pencil-square fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <form action="/administrator/account/{{accountId}}/delete" method="post">
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                        <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/usersPreview}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 justify-content-md-center justify-content-start mb-5 mt-3 mt-md-0">
+            <div class="col-3">
+                <button type="button" class="btn p-0 border-0 btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalUsers">
+                    Mas usuarios</button>
+            </div>
+        </div>
+
+        <!-- Films Table -->
+        <div class="row mx-0 justify-content-md-center justify-content-start">
+            <div class="col-sm-10 col-lg-10 col-8">
+                <div class="table-responsive">
+                    <table class="table table-striped caption-top table-bordered">
+                        <colgroup>
+                            <col style="width:8%;">
+                            <col style="width:35%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:25%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                        </colgroup>
+                        <caption class="admin-caption">Peliculas del Sistema</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col" class="text-center">Duración</th>
+                                <th scope="col" class="text-center">Media</th>
+                                <th scope="col">Plataformas</th>
+
+                                <th scope="col" class="text-center">Editar</th>
+                                <th scope="col" class="text-center">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {{#moviesPreview}}
+                            <tr>
+                                <th scope="row" class="text-center">{{filmographyId}}</th>
+                                <td>{{filmographyName}}</td>
+                                <td class="text-center">{{movieDuration}}min</td>
+                                <td class="text-center">{{filmographyAverageStars}}</td>
+                                <td>{{filmographyPlatforms}}</td>
+                                <td class="text-center">
+                                    <a href="/movies/{{filmographyId}}/edit"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-pencil-square fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <form action="/movies/{{filmographyId}}/delete" method="post">
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                        <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/moviesPreview}}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 justify-content-md-center justify-content-start mb-5 mt-3 mt-md-0">
+            <div class="col-3">
+                <button type="button" class="btn p-0 border-0 btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalFilms">
+                    Mas Peliculas</button>
+            </div>
+            <div class="col-auto">
+                <a href="/movies/new" class="btn btn-sm border-0 p-0 "><i
+                        class="bi bi-plus-square fs-5 text-primary"></i></a>
+            </div>
+        </div>
+
+        <!-- Series Table -->
+        <div class="row mx-0 justify-content-md-center justify-content-start">
+            <div class="col-sm-10 col-lg-10 col-8">
+                <div class="table-responsive">
+                    <table class="table table-striped caption-top table-bordered">
+                        <colgroup>
+                            <col style="width:8%;">
+                            <col style="width:40%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:20%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                        </colgroup>
+
+                        <caption class="admin-caption">Series del Sistema</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col" class="text-center">Temporada</th>
+                                <th scope="col" class="text-center">Media</th>
+                                <th scope="col">Plataformas</th>
+
+                                <th scope="col" class="text-center">Editar</th>
+                                <th scope="col" class="text-center">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {{#seriesPreview}}
+                            <tr>
+                                <th scope="row" class="text-center">{{filmographyId}}</th>
+                                <td>{{filmographyName}}</td>
+                                <td class="text-center">{{serieDuration}}</td>
+                                <td class="text-center">{{filmographyAverageStars}}</td>
+                                <td>{{filmographyPlatforms}}</td>
+                                <td class="text-center">
+                                    <a href="/series/{{filmographyId}}/edit"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-pencil-square fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <form action="/series/{{filmographyId}}/delete" method="post">
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                        <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/seriesPreview}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 justify-content-md-center justify-content-start mb-5 mt-3 mt-md-0">
+            <div class="col-3">
+                <button type="button" class="btn p-0 border-0 btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalSeries">
+                    Mas Series</button>
+            </div>
+            <div class="col-auto">
+                <a href="/series/new" class="btn btn-sm border-0 p-0 "><i
+                        class="bi bi-plus-square fs-5 text-primary"></i></a>
+            </div>
+        </div>
+
+        <!-- Sistem Lists Table -->
+        <div class="row mx-0 justify-content-md-center justify-content-start">
+            <div class="col-sm-10 col-lg-10 col-8">
+                <div class="table-responsive">
+                    <table class="table table-striped caption-top table-bordered">
+                        <colgroup>
+                            <col style="width:8%;">
+                            <col style="width:46%;">
+                            <col style="width:30%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                        </colgroup>
+
+                        <caption class="admin-caption">Listas del Sistema</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">N.Peliculas</th>
+                                <th scope="col" class="text-center">Editar</th>
+                                <th scope="col" class="text-center">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {{#systemListsPreview}}
+                            <tr>
+                                <th scope="row" class="text-center">{{listsId}}</th>
+                                <td>{{listName}}</td>
+                                <td class="text-center">{{listSize}}</td>
+                                <td class="text-center">
+                                    <a href="/myLists" class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-pencil-square fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <form action="administrator/systemLists/{{listsId}}/delete" method="post">
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                        <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/systemListsPreview}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 justify-content-md-center justify-content-start mb-5 mt-3 mt-md-0">
+            <div class="col-3">
+                <button type="button" class="btn p-0 border-0 btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalListSistem">
+                    Mas Listas del Sistema</button>
+            </div>
+        </div>
+
+        <!-- Directors Table -->
+        <div class="row mx-0 justify-content-md-center justify-content-start">
+            <div class="col-sm-10 col-lg-10 col-8">
+                <div class="table-responsive">
+                    <table class="table table-striped caption-top table-bordered">
+                        <colgroup>
+                            <col style="width:8%;">
+                            <col style="width:46%;">
+                            <col style="width:30%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                        </colgroup>
+
+                        <caption class="admin-caption">Directores del Sistema</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Año de Nacimiento</th>
+                                <th scope="col" class="text-center">Editar</th>
+                                <th scope="col" class="text-center">Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {{#directorPreview}}
+                            <tr>
+                                <th scope="row" class="text-center">{{directorId}}</th>
+                                <td>{{directorName}}</td>
+                                <td class="text-center">{{directorBirthDate}}</td>
+                                <td class="text-center">
+                                    <a href="/administrator/director/{{directorId}}/edit"
+                                        class="btn btn-sm border-0 p-0 text-dark"><i
+                                            class="bi bi-pencil-square fs-5"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <form action="/administrator/director/{{directorId}}/delete" method="post">
+                                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                        <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{/directorPreview}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-0 justify-content-md-center justify-content-start mb-5 mt-3 mt-md-0">
+            <div class="col-3">
+                <button type="button" class="btn p-0 border-0 btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalDirectors">
+                    Mas Directores</button>
+            </div>
+            <div class="col-auto">
+                <a href="/director/new" class="btn btn-sm border-0 p-0 "><i
+                        class="bi bi-plus-square fs-5 text-primary"></i></a>
+            </div>
+        </div>
+
+
+
+        <!-- Chart -->
+        <div class="row justify-content-md-center justify-content-start">
+            <div class="col-8 col-lg-5 mb-5 ">
+                <canvas id="myPie" data-labels='{{{chartLabels}}}' data-values='{{{chartData}}}'></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <!-- Users Modal -->
+    <div class="modal fade" id="modalUsers" tabindex="-1" aria-labelledby="modalUsersLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl table-admin">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalUsersTitleLabel">Todos los Usuarios</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="table-responsive">
+                            <table class="table table-striped caption-top table-bordered align-middle w-100">
+                                <colgroup>
+                                    <col style="width:8%;">
+                                    <col style="width:21%;">
+                                    <col style="width:25%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:6%;">
+                                </colgroup>
+                                <caption class="admin-caption">Usuarios del sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col">Cumpleaños</th>
+                                        <th scope="col">Rol</th>
+                                        <th scope="col" class="text-center align-middle">Lists</th>
+                                        <th scope="col" class="text-center align-middle">Reseñas</th>
+                                        <th scope="col" class="text-center align-middle">Editar</th>
+                                        <th scope="col" class="text-center align-middle">Borrar</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {{#users}}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{accountId}}</th>
+                                        <td>{{accountName}}</td>
+                                        <td>{{accountEmail}}</td>
+                                        <td>{{accountBirthDate}}</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary ">
+                                                {{accountRole}}
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a href="/administrator/profile/{{accountId}}/userlist"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-list-nested fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="/administrator/profile/{{accountId}}/review"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-card-text fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="/administrator/profile/{{accountId}}/editProfile"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-pencil-square fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="/administrator/account/{{accountId}}/delete" method="post">
+                                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                                <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                        class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{/users}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-small" data-bs-dismiss="modal">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Films Modal -->
+    <div class="modal fade" id="modalFilms" tabindex="-1" aria-labelledby="modalFilmsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl table-admin">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalFilmsTitleLabel">Todas las Peliculas</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="table-responsive">
+                            <table class="table table-striped caption-top table-bordered align-middle w-100">
+                                <colgroup>
+                                    <col style="width:8%;">
+                                    <col style="width:35%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:25%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                </colgroup>
+                                <caption class="admin-caption">Peliculas</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col" class="text-center">Duración</th>
+                                        <th scope="col" class="text-center">Media</th>
+                                        <th scope="col">Plataformas</th>
+
+                                        <th scope="col" class="text-center">Editar</th>
+                                        <th scope="col" class="text-center">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {{#movies}}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{filmographyId}}</th>
+                                        <td>{{filmographyName}}</td>
+                                        <td class="text-center">{{movieDuration}}min</td>
+                                        <td class="text-center">{{filmographyAverageStars}}</td>
+                                        <td>{{filmographyPlatforms}}</td>
+                                        <td class="text-center">
+                                            <a href="/movies/{{filmographyId}}/edit"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-pencil-square fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="/movies/{{filmographyId}}/delete" method="post">
+                                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                                <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                        class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{/movies}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-small" data-bs-dismiss="modal">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Series Modal -->
+    <div class="modal fade" id="modalSeries" tabindex="-1" aria-labelledby="SeriesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl table-admin">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="SeriesTitleLabel">Todas las Series</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="table-responsive">
+                            <table class="table table-striped caption-top table-bordered align-middle w-100">
+                                <colgroup>
+                                    <col style="width:8%;">
+                                    <col style="width:40%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                    <col style="width:20%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+
+                                </colgroup>
+                                <caption class="admin-caption">Series</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col" class="text-center">Temporada</th>
+                                        <th scope="col" class="text-center">Media</th>
+                                        <th scope="col">Plataformas</th>
+
+                                        <th scope="col" class="text-center">Editar</th>
+                                        <th scope="col" class="text-center">Borrar</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {{#series}}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{filmographyId}}</th>
+                                        <td>{{filmographyName}}</td>
+                                        <td class="text-center">{{serieDuration}}</td>
+                                        <td class="text-center">{{filmographyAverageStars}}</td>
+                                        <td>{{filmographyPlatforms}}</td>
+                                        <td class="text-center">
+                                            <a href="/series/{{filmographyId}}/edit"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-pencil-square fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="/series/{{filmographyId}}/delete" method="post">
+                                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                                <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                        class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{/series}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-small" data-bs-dismiss="modal">Guardar
+                        Cambios</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistem Lists Modal -->
+    <div class="modal fade" id="modalListSistem" tabindex="-1" aria-labelledby="modalListSistemLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl table-admin">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="ListModalSistemLabel">Todas las Listas del Sitema</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="table-responsive">
+                            <table class="table table-striped caption-top table-bordered">
+                                <colgroup>
+                                    <col style="width:8%;">
+                                    <col style="width:46%;">
+                                    <col style="width:30%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                </colgroup>
+
+                                <caption class="admin-caption">Listas del Sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">N.Peliculas</th>
+                                        <th scope="col" class="text-center">Editar</th>
+                                        <th scope="col" class="text-center">Borrar</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {{#systemLists}}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{listsId}}</th>
+                                        <td>{{listName}}</td>
+                                        <td class="text-center">{{listSize}}</td>
+                                        <td class="text-center">
+                                            <a href="/myLists" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-pencil-square fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="administrator/systemLists/{{listsId}}/delete" method="post">
+                                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                                <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                        class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{/systemLists}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-small" data-bs-dismiss="modal">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Director Modal -->
+    <div class="modal fade" id="modalDirectors" tabindex="-1" aria-labelledby="modalDirectorsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl table-admin">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalDirectorsLabel">Todas los Directores del Sitema</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="table-responsive">
+                            <table class="table table-striped caption-top table-bordered">
+                                <colgroup>
+                                    <col style="width:8%;">
+                                    <col style="width:46%;">
+                                    <col style="width:30%;">
+                                    <col style="width:8%;">
+                                    <col style="width:8%;">
+                                </colgroup>
+
+                                <caption class="admin-caption">Directores del Sistema</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Año de Nacimiento</th>
+                                        <th scope="col" class="text-center">Editar</th>
+                                        <th scope="col" class="text-center">Borrar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {{#director}}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{directorId}}</th>
+                                        <td>{{directorName}}</td>
+                                        <td class="text-center">{{directorBirthDate}}</td>
+                                        <td class="text-center">
+                                            <a href="/administrator/director/{{directorId}}/edit"
+                                                class="btn btn-sm border-0 p-0 text-dark"><i
+                                                    class="bi bi-pencil-square fs-5"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="/administrator/director/{{directorId}}/delete" method="post">
+                                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                                <button type="submit" class="btn btn-sm border-0 p-0 text-dark"><i
+                                                        class="bi bi-trash3 fs-5 text-danger"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {{/director}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-small" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-small" data-bs-dismiss="modal">Guardar
+                        Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/loadMoviesSeriesLists.js"></script>
+    <script src="js/pieChart.js" defer></script>
+
+</body>
+
+</html>

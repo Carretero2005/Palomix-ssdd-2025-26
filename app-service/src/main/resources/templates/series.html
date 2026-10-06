@@ -1,0 +1,41 @@
+{{>head}}
+
+<body class="primary principal" id="page-series">
+    {{>header}}
+
+    <div class="content">
+        {{#seriesSections}}
+        <div class="genre-section mb-5">
+            <div class="d-flex justify-content-start align-items-center gap-3 mb-3 view-more">
+                <h4>Series de {{name}}</h4>
+                <a class="btn btn-secondary btn-small" href="/lists/{{listsId}}">Ver más</a>
+            </div>
+
+            <div class="films">
+                {{#series}}
+                <div class="card">
+                    <a href="/filmographies/{{filmographyId}}">
+                        {{#filmographyImage}}
+                        <img src="/img/{{imageId}}" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        {{^filmographyImage}}
+                        <img src="images/posterNotAvailable.jpg" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        <h5>{{filmographyName}}</h5>
+                    </a>
+                </div>
+                {{/series}}
+
+                {{^series}}
+                <p>No hay series de {{name}} disponibles.</p>
+                {{/series}}
+            </div>
+        </div>
+        {{/seriesSections}}
+    </div>
+
+    {{>footer}}
+</body>
+
+</html>
+

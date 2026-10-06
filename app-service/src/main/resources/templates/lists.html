@@ -1,0 +1,37 @@
+{{>head}}
+
+<body class="primary principal" id="page-listas">
+    {{>header}}
+
+    <!-- Page content -->
+    <div class="content">
+
+        {{#sections}}
+        <div style="margin-top: 30px;">
+            <div class="d-flex justify-content-start align-items-center gap-3 mb-3 view-more">
+                <h4>{{sectionTitle}}</h4>
+            </div>
+            <div class="films">
+                {{#lists}}
+                <div class="card text-center">
+                    <a href="/lists/{{listsId}}" class="text-decoration-none">
+                        <img src="{{firstImage}}" alt="{{listName}}">
+                        <h5>{{listName}}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <p class="mb-0 text-white-50 small">{{size}} elementos</p>
+                            
+                            <p class="mb-0 text-white small">Por: {{authorName}}</p>
+                        </div>
+                    </a>
+                </div>
+                {{/lists}}
+            </div>
+        </div>
+        {{/sections}}
+
+    </div>
+
+    {{>footer}}
+</body>
+
+</html>

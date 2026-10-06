@@ -1,0 +1,44 @@
+{{>head}}
+
+<body class="primary principal">
+    {{>header}}
+
+    <!-- Page Content -->
+    <div class="content px-5">
+        <!-- Título + buttom -->
+        <div class="d-flex justify-content-between align-items-center py-3">
+            <h4 class="mb-0">{{listName}}</h4>
+            <a href="/lists" class="btn btn-secondary">Volver</a>
+        </div>
+
+        <!-- Films grid -->
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
+
+            {{#filmographyList}}
+            <div class="col">
+                <div class="card film-list">
+                    <a href="/filmographies/{{filmographyId}}" class="text-decoration-none text-dark">
+                        {{#filmographyImage}}
+                        <img src="/img/{{imageId}}" class="card-img-top" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        {{^filmographyImage}}
+                        <img src="/images/posterNotAvailable.jpg" class="card-img-top" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                    </a>
+                </div>
+            </div>
+            {{/filmographyList}}
+
+            {{^filmographyList}}
+            <div class="col-12 text-center py-5">
+                <p class="text-light">Esta lista está vacía</p>
+            </div>
+            {{/filmographyList}}
+        </div>
+    </div>
+
+    {{>footer}}
+
+</body>
+
+</html>

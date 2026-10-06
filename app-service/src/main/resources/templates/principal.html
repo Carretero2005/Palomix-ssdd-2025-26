@@ -1,0 +1,71 @@
+{{>head}}
+
+<body class="primary principal" id="page-peliculas">
+    {{>header}}
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- NEW MOVIES -->
+        <div class="mt-3 mb-3">
+            <div class="d-flex justify-content-start align-items-center gap-3 mb-3 view-more">
+                <h4>Películas recientemente añadidas</h4>
+                <a class="btn btn-secondary btn-small" href="/films/recent">Ver más</a>
+            </div>
+
+            <div class="films">
+                {{#newMovies}}
+                <div class="card">
+                    <a href="/filmographies/{{filmographyId}}">
+                        {{#filmographyImage}}
+                        <img src="/img/{{imageId}}" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        {{^filmographyImage}}
+                        <img src="images/posterNotAvailable.jpg" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        <h5>{{filmographyName}}</h5>
+                    </a>
+                </div>
+                {{/newMovies}}
+
+                {{^newMovies}}
+                <p>No hay películas nuevas disponibles.</p>
+                {{/newMovies}}
+            </div>
+        </div>
+
+        <!-- Genre movies -->
+        {{#movieSections}}
+        <div class="mt-3 mb-3">
+            <div class="d-flex justify-content-start align-items-center gap-3 mb-3 view-more">
+                <h4>Películas de {{name}}</h4>
+                <a class="btn btn-secondary btn-small" href="/lists/{{listsId}}">Ver más</a>
+            </div>
+
+            <div class="films">
+                {{#movies}}
+                <div class="card">
+                    <a href="/filmographies/{{filmographyId}}">
+                        {{#filmographyImage}}
+                        <img src="/img/{{imageId}}" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+                        {{^filmographyImage}}
+                        <img src="images/posterNotAvailable.jpg" alt="{{filmographyName}}">
+                        {{/filmographyImage}}
+
+                        <h5>{{filmographyName}}</h5>
+                    </a>
+                </div>
+                {{/movies}}
+
+                {{^movies}}
+                <p>No hay películas de {{name}} disponibles.</p>
+                {{/movies}}
+            </div>
+        </div>
+        {{/movieSections}}
+    </div>
+
+    {{>footer}}
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+{{>head}}
+
+<body class="primary principal">
+    {{>header}}
+
+    <!-- Page content -->
+    <div class="container-fluid py-4 content">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card p-3 p-md-4 generic-card rounded-4 border-0">
+                    <h3 class="mb-3 text-center text-white">
+                        {{#filmographyId}}Editar {{/filmographyId}}
+                        {{^filmographyId}}Añadir {{/filmographyId}}
+                        {{#isSeries}}Serie{{/isSeries}}
+                        {{^isSeries}}Pelicula{{/isSeries}}
+                    </h3>
+                    
+                    <!-- Form -->
+                    {{#filmographyId}}
+                    {{#isSeries}}
+                    <form action="/series/{{filmographyId}}/edit" enctype="multipart/form-data" method="post"
+                        class="d-flex flex-column gap-3 administer-form">
+                    {{/isSeries}}
+
+                    {{^isSeries}}
+                    <form action="/movies/{{filmographyId}}/edit" enctype="multipart/form-data" method="post"
+                        class="d-flex flex-column gap-3 administer-form">
+                    {{/isSeries}}
+                    {{/filmographyId}}
+
+                    {{^filmographyId}}
+                    {{#isSeries}}
+                    <form action="/series/new" enctype="multipart/form-data" method="post"
+                        class="d-flex flex-column gap-3 administer-form">
+                    {{/isSeries}}
+                    
+                    {{^isSeries}}
+                    <form action="/movies/new" enctype="multipart/form-data" method="post"
+                        class="d-flex flex-column gap-3 administer-form">
+                    {{/isSeries}}
+                    {{/filmographyId}}
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                        <!-- Clikable Image -->
+                         {{#filmographyImage}}
+                        <div class="d-flex flex-column align-items-center mb-3">
+                            <img id="posterPreview" src="/img/{{imageId}}"
+                                alt="Seleccionar imagen" class="border rounded-3 img-fluid poster" style="cursor: pointer;">
+                            <p class="mt-2 mb-0 text-white-50 small">Pulsa la imagen para cargar una portada</p>
+                        </div>
+                        <input type="file" name="imageFile" id="posterInput" class="d-none" accept=".jpg,.jpeg">
+                        {{/filmographyImage}}
+                        {{^filmographyImage}}
+                        <div class="d-flex flex-column align-items-center mb-3">
+                            <img id="posterPreview" src="/images/prePoster.jpg"
+                                alt="Seleccionar imagen" class="border rounded-3 img-fluid poster" style="cursor: pointer;">
+                            <p class="mt-2 mb-0 text-white-50 small">Pulsa la imagen para cargar una portada</p>
+                        </div>
+                        <input type="file" name="imageFile" id="posterInput" class="d-none" accept=".jpg,.jpeg">
+                        {{/filmographyImage}}
+
+                        <!-- Title -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Título:</label>
+                            <input type="text" class="form-control" name="filmographyName"
+                                placeholder="Título" value="{{filmographyName}}" required>
+                        </div>
+                        <!-- Director -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Director:</label>
+                            <select class="form-select" name="directorName" required>
+                                <option value="" disabled selected>Selecciona un director...</option>
+                                <option value="UNKNOWN">Director desconocido</option>
+                                {{#allDirectors}}
+                                <option value="{{directorName}}" {{#selected}}selected{{/selected}}>
+                                    {{directorName}}
+                                </option>
+                                {{/allDirectors}}
+                            </select>
+                        </div>
+                        <!-- Release Year & Duration/Seasons -->
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6">
+                                <div class="d-flex flex-column">
+                                    <label class="fw-bold text-white">Año de lanzamiento:</label>
+                                    <input type="number" class="form-control" name="filmographyYear"
+                                        placeholder="Año de lanzamiento" min="1800" max="2026"
+                                        value="{{filmographyYear}}" required>
+                                </div>
+                            </div>
+                            {{#isSeries}}
+                            <div class="col-12 col-sm-6">
+                                <div class="d-flex flex-column">
+                                    <label class="fw-bold text-white">Número de temporadas:</label>
+                                    <input type="number" class="form-control" name="serieDuration"
+                                        placeholder="Número de temporadas" min="1"
+                                        value="{{serieDuration}}" required>
+                                </div>
+                            </div>
+                            {{/isSeries}}
+                            {{^isSeries}}
+                            <div class="col-12 col-sm-6">
+                                <div class="d-flex flex-column">
+                                    <label class="fw-bold text-white">Duración:</label>
+                                    <input type="number" class="form-control" name="movieDuration"
+                                        placeholder="Duración (minutos)" min="0"
+                                        value="{{movieDuration}}" required>
+                                </div>
+                            </div>
+                            {{/isSeries}}
+                        </div>
+                        <!-- Genres -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Géneros:</label>
+                            <div class="d-flex flex-wrap gap-2 mt-1" id="genreContainer">
+                                {{#allGenres}}
+                                <span class="badge genre-badge rounded-pill py-2 px-3" 
+                                    data-value="{{value}}" 
+                                    style="cursor:pointer; background-color: {{#selected}}#0d6efd{{/selected}}{{^selected}}#6c757d{{/selected}}">
+                                    {{displayName}}
+                                </span>
+                                {{/allGenres}}
+                            </div>
+                            <span id="genreError" class="text-danger small mt-1" style="display:none;">Selecciona al menos un género.</span>
+                        </div>
+                        <!-- Platforms -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Plataformas:</label>
+                            <div class="d-flex flex-wrap gap-2 mt-1" id="platformContainer">
+                                {{#allPlatforms}}
+                                <span class="badge platform-badge rounded-pill py-2 px-3" 
+                                    data-value="{{value}}" 
+                                    style="cursor:pointer; background-color: {{#selected}}#0d6efd{{/selected}}{{^selected}}#6c757d{{/selected}}">
+                                    {{displayName}}
+                                </span>
+                                {{/allPlatforms}}
+                            </div>
+                            <span id="platformError" class="text-danger small mt-1" style="display:none;">Selecciona al menos una plataforma.</span>
+                        </div>
+                        <!-- Synopsis -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Sinopsis:</label>
+                            <textarea class="form-control" name="filmographySynopsis"
+                                placeholder="Sinopsis" rows="4" required>{{filmographySynopsis}}</textarea>
+                        </div>
+                        <!-- Trailer URL -->
+                        <div class="d-flex flex-column">
+                            <label class="fw-bold text-white">Trailer URL:</label>
+                            <input type="url" class="form-control" name="filmographyTrailerUrl"
+                                placeholder="Trailer URL" value="{{filmographyTrailerUrl}}" required>
+                        </div>
+                        <!-- Submit & Cancel buttons -->
+                        <div class="d-flex gap-2">
+                            <button href="/administrator" class="btn btn-primary w-50 py-2" type="submit" id="submitBtn">
+                                {{#filmographyId}}Actualizar{{/filmographyId}}
+                                {{^filmographyId}}Añadir{{/filmographyId}}
+                            </button>
+                            <a href="/administrator" class="btn btn-danger p-2 w-50"><strong>Cancelar</strong></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <!-- Scripts -->
+    <script src="/js/posterMoviesSeries.js"></script>
+    <script>
+        document.querySelectorAll('.genre-badge, .platform-badge').forEach(badge => {
+            const isPlatform = badge.classList.contains('platform-badge');
+            const inputName = isPlatform ? 'platformsIds' : 'genreIds';
+            const value = badge.dataset.value;
+            
+            if (badge.getAttribute('style').includes('#0d6efd')) {
+                badge.classList.add('active');
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = inputName;
+                input.value = value;
+                document.querySelector('.administer-form').appendChild(input);
+            }
+
+            badge.addEventListener('click', function () {
+                this.classList.toggle('active');
+
+                const existing = document.querySelector(`input[name="${inputName}"][value="${value}"]`);
+                if (existing) {
+                    existing.remove();
+                } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = inputName;
+                    input.value = value;
+                    document.querySelector('.administer-form').appendChild(input);
+                }
+
+                this.style.backgroundColor = this.classList.contains('active') ? '#0d6efd' : '#6c757d';
+            });
+        });
+
+        document.querySelector('.administer-form').addEventListener('submit', function(e) {
+        const genreInputs = document.querySelectorAll('input[name="genreIds"]');
+        const platformInputs = document.querySelectorAll('input[name="platformsIds"]');
+        
+        let valid = true;
+
+        if (genreInputs.length === 0) {
+            document.getElementById('genreError').style.display = 'inline';
+            valid = false;
+        } else {
+            document.getElementById('genreError').style.display = 'none';
+        }
+
+        if (platformInputs.length === 0) {
+            document.getElementById('platformError').style.display = 'inline';
+            valid = false;
+        } else {
+            document.getElementById('platformError').style.display = 'none';
+        }
+
+        if (!valid) e.preventDefault();
+    });
+    </script>
+
+</body>
+
+</html>
